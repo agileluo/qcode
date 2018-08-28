@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>二维码扫描历史</title>
+<link rel="stylesheet" href="/css/bootstrap.css" />
+<link rel="stylesheet" href="/css/docs.css" />
+<script type="text/javascript" src="/js/jquery-1.12.3.js"></script>
+<script type="text/javascript" src="/js/vue_2.3.0.js"></script>
+<script type="text/javascript" src="/js/vue-select_2.2.0.js"></script>
+<script type="text/javascript" src="/js/underscore.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+</head>
+
+<body>
+	<div style="display:block;top:40px;right:40px;width:140px;height:140px;position:fixed;">
+		<img width="140px" height="140px"  src="./image/apk.png">
+	</div>
+	<div id="app" class="container-fluid">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<div>
+					<div class="page-header">
+						<h2>
+							二维码扫描历史 <small></small>
+						</h2>
+					</div>
+				</div>
+				<div class="row">
+					<form class="form-inline">
+						<a href="javascript:"  class="btn btn-primary" @click="queryList">刷新</a>
+					</form>
+				</div>
+				<div class="row" style="margin-top: 10px">
+					<div>
+						<table class="table table-condensed table-hover table-striped">
+							<thead>
+								<tr>
+									<th width="180px">时间</th>
+									<th>内容</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="item in list">
+									<td>{{item.date}}</td>
+									<td>{{item.body}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="index.js"></script>
+</body>
+
+</html>

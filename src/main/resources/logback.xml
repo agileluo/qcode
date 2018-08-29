@@ -1,5 +1,6 @@
 <configuration>
 
+	<logger level="DEBUG" name="io.github.agileluo.qcode.mapper"/>
 	<!-- 控制台输出 -->
 	<appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
 		<encoder>

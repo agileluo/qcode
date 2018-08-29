@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.agileluo.qcode.mapper.ScanLogMapper">
+  <resultMap id="BaseResultMap" type="io.github.agileluo.qcode.model.ScanLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="group1" jdbcType="VARCHAR" property="group1" />
+    <result column="group2" jdbcType="VARCHAR" property="group2" />
+    <result column="group3" jdbcType="VARCHAR" property="group3" />
+    <result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+
+  <select id="query" resultMap="BaseResultMap">
+    select * from scan_log where 1 = 1
+    <if test='userId != null and userId != ""'>
+      and user_id = #{userId}
+    </if>
+    <if test='group1 != null and group1 != ""'>
+      and group1 = #{group1}
+    </if>
+    <if test='group2 != null and group2 != ""'>
+      and group2 = #{group2}
+    </if>
+    <if test='group3 != null and group3 != ""'>
+      and group3 = #{group3}
+    </if>
+    <if test='groupName != null and groupName != ""'>
+      and ( group1 like concat('%',#{groupName},'%')
+      or  group2 like concat('%',#{groupName},'%')
+      or  group3 like concat('%',#{groupName},'%'))
+    </if>
+    <if test='qrcode != null and qrcode != ""'>
+      and qrcode = #{qrcode}
+    </if>
+    <if test='createTimeStart != null and createTimeStart != ""'>
+      <![CDATA[
+      and create_time >= #{createTimeStart}
+      ]]>
+    </if>
+    <if test='createTimeEnd != null and createTimeEnd != ""'>
+      <![CDATA[
+      and create_time <= #{createTimeEnd}
+      ]]>
+    </if>
+    order by create_time desc
+  </select>
+
+</mapper>

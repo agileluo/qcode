@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.agileluo.qcode.mapper.ScanGroupMapper">
+  <resultMap id="BaseResultMap" type="io.github.agileluo.qcode.model.ScanGroup">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="queryGroupList" resultMap="BaseResultMap">
+     select * from scan_group
+      where
+      <if test='parentId == null or parentId == ""'>
+        parent_id is null
+      </if>
+      <if test='parentId != null and parentId != ""'>
+        parent_id = #{parentId}
+      </if>
+      order by update_time desc
+  </select>
+</mapper>

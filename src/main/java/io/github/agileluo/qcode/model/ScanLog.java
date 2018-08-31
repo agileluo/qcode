@@ -14,8 +14,11 @@ public class ScanLog {
     /**
      * 用户Id
      */
-    @Column(name = "user_id")
+
     private String userId;
+
+    @Column(name = "open_id")
+    private String openId;
 
     /**
      * 一级分类

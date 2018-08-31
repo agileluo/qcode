@@ -11,11 +11,12 @@ import io.github.agileluo.qcode.vo.PageResp;
 import io.github.agileluo.qcode.vo.ScanLogQueryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Example;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -26,21 +27,26 @@ public class ScanLogController {
     @Autowired
     private ScanLogMapper mapper;
 
+
+
     @RequestMapping("add")
+    @Transactional
     public ScanLog add(@RequestBody ScanLog scanLog) {
         CheckUtils.checkEmpty(scanLog, "userId", "group1", "group2", "group3", "qrcode");
         try {
             scanLog.setCreateTime(new Date());
             mapper.insert(scanLog);
+
+
             return scanLog;
         } catch (DuplicateKeyException ex) {
             ScanLog query = new ScanLog();
             query.setQrcode(scanLog.getQrcode());
             ScanLog dbLog = mapper.selectOne(query);
-            if(scanLog.getGroup3().equals(dbLog.getGroup3())){
+            if(scanLog.getGroup3().equals(dbLog.getGroup3()) && dbLog.getUserId().equals(scanLog.getUserId())){
                 return dbLog;
             }
-            throw new BizException("记录已扫描到【" + dbLog.getGroup3() + "】");
+            throw new BizException("记录已被【" + dbLog.getUserId() + "】于【" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dbLog.getCreateTime()) + "】 扫描到【" + dbLog.getGroup1() + " - " + dbLog.getGroup2() + " - " + dbLog.getGroup3() + "】");
         }
     }
 

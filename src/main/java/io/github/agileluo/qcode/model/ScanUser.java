@@ -5,25 +5,39 @@ import javax.persistence.*;
 
 import lombok.Data;
 @Data 
-@Table(name = "scan_group")
-public class ScanGroup {
+@Table(name = "scan_user")
+public class ScanUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 分类名
+     * 用户名
      */
-    private String name;
+    @Column(name = "user_name")
+    private String userName;
 
     /**
-     * 父级Id
+     * 密码
      */
-    @Column(name = "parent_id")
-    private Long parentId;
+    private String password;
 
+    /**
+     * 真实姓名
+     */
+    @Column(name = "real_name")
+    private String realName;
+
+    /**
+     * 微信id
+     */
     @Column(name = "open_id")
     private String openId;
+
+    /**
+     * 微信昵称
+     */
+    @Column(name = "wx_name")
+    private String wxName;
 
     /**
      * 创建时间

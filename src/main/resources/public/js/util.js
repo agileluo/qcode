@@ -161,24 +161,9 @@ function openLogin(cb) {
 }
 
 var linkList = [{
-    name: '配置中心',
+    name: '用户管理',
     url: '/index.html'
 }, {
-    name: '服务注册中心',
-    url: '/zkservice/index.html'
-}, {
-    name: '日志查询',
+    name: '记录管理',
     url: '/log/index.html'
-}, {
-    name: '项目生成',
-    url: '/project/index.html'
-}, {
-    name: '数据生成',
-    url: '/dataGen/index.html'
-}, {
-    name: '部署',
-    url: '/deploy/index.html'
-}, {
-    name: '短信验证码',
-    url: '/sms/index.html'
 }]

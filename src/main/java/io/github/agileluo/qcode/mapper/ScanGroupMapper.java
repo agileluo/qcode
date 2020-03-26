@@ -9,4 +9,6 @@ import java.util.List;
 public interface ScanGroupMapper extends Mapper<ScanGroup> {
 
     List<ScanGroup> queryGroupList(@Param("parentId") Long parentId);
+
+    List<ScanGroup> queryGroupList(@Param("parentId") Long parentId, @Param("openId") String openId);
 }

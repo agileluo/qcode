@@ -4,14 +4,15 @@
 <head>
 <meta charset="utf-8">
 <title>用户管理中心</title>
-<link rel="stylesheet" href="/css/bootstrap.css" />
-<link rel="stylesheet" href="/css/docs.css" />
-<script type="text/javascript" src="/js/jquery-1.12.3.js"></script>
-<script type="text/javascript" src="/js/vue_2.3.0.js"></script>
-<script type="text/javascript" src="/js/vue-select_2.2.0.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/bootstrap.js"></script>
-<script type="text/javascript" src="/js/util.js"></script>
+	<link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/docs.css" />
+	<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.3/jquery.js"></script>
+	<script type="text/javascript" src="https://cdn.bootcss.com/vue/2.3.0/vue.js"></script>
+	<script type="text/javascript" src="/js/vue-select_2.2.0.js"></script>
+	<script type="text/javascript" src="https://cdn.bootcss.com/underscore.js/1.9.1/underscore.js"></script>
+	<script type="text/javascript" src="https://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/js/util.js"></script>
+	<script type="text/javascript" src="/js/pagination.js"></script>
 </head>
 
 <body>
@@ -24,17 +25,22 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-11 col-md-offset-1">
-				<div>
-					<div class="page-header">
-						<h2>
-							用户管理中心 <small></small>
-						</h2>
-					</div>
-				</div>
+			<div class="col-md-10 col-md-offset-1">
 				<div class="row">
 					<form class="form-inline">
-						<a href="javascript:" class="btn btn-success" @click="add">新增</a>
+						<div class="form-group">
+							<label class="sr-only">二维码内容</label>
+							<input type="text" width="250px" class="form-control" v-model="req.qrcode" placeholder="二维码内容">
+						</div>
+						<div class="form-group">
+							<input type="date" width="200px" class="form-control" v-model="req.createTimeStart" placeholder="开始时间">
+						</div>
+					 	 到
+						<div class="form-group">
+							<input type="date" width="200px" class="form-control" v-model="req.createTimeEnd" placeholder="结束时间">
+						</div>
+						<a href="javascript:" class="btn btn-success" @click="query()">查询</a>
+						<a :href="downUrl" class="btn btn-primary" >下载</a>
 					</form>
 				</div>
 				<div class="row" style="margin-top: 10px">
@@ -42,81 +48,38 @@
 						<table class="table table-condensed table-hover table-striped">
 							<thead>
 								<tr>
-									<th>用户名</th>
-									<th>真实姓名</th>
-									<th>绑定微信</th>
+									<th>一级分类</th>
+									<th>二级分类</th>
+									<th>三级分类</th>
+									<th>二维码内容</th>
+									<th>扫描时间</th>
+									<th>操作人</th>
 									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(u, index) in users">
-									<td>{{u.userName}}</td>
-									<td>{{u.realName}}</td>
-									<td>{{u.wxName}}</td>
-									<td><a href="javascript:" class="btn btn-primary"
-										@click="edit(u)">编辑</a> <a href="javascript:"
-										class="btn btn-danger" @click="del(u, index)">删除</a></td>
+								<tr v-for="(l, index) in list">
+									<td>{{l.group1}}</td>
+									<td>{{l.group2}}</td>
+									<td>{{l.group3}}</td>
+									<td>{{l.qrcode}}</td>
+									<td>{{l.createTime}}</td>
+									<td>{{l.userId}}</td>
+									<td><a href="javascript:"
+										class="btn btn-danger" @click="del(l, index)">删除</a></td>
 								</tr>
-								<tr v-show="!users || users.length == 0">
+								<tr v-show="!list || list.length == 0">
 								  <td colspan="2">无数据</td>
 								</tr>
 							</tbody>
 						</table>
+						<pagination :total-count="total"
+									:page-size="pageSize"
+									@page="goPage"></pagination>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="modal fade bs-example-modal-m" tabindex="-1"
-			role="dialog" id="loginDialog" aria-labelledby="gridSystemModalLabel">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<h4 class="modal-title" id="gridSystemModalLabel">编辑</h4>
-					</div>
-					<div class="modal-body">
-						<form class="form-horizontal">
-							<div class="form-group">
-								<label class="col-md-2 control-label">用户名</label>
-								<div class="col-md-6">
-									<input type="text" class="form-control"
-										v-model="user.userName" name="serviceId" placeholder="用户名">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">密码</label>
-								<div class="col-md-6">
-									<input type="text" class="form-control"
-										v-model="user.password" placeholder="密码"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-2 control-label">真实姓名</label>
-								<div class="col-md-6">
-									<input type="text" class="form-control"
-											  v-model="user.realName" placeholder="真实姓名"></textarea>
-								</div>
-							</div>
-							<div class="form-group">
-								<div v-show="dialogError" class="col-md-offset-1 col-md-10">
-									<span class="text-danger">{{dialogError}}</span>
-								</div>
-							</div>
-							<div class="form-group">
-								<div class="col-md-offset-9 col-md-1">
-									<a class="btn btn-default" data-dismiss="modal">取 消</a>
-								</div>
-								<div class="col-md-1">
-									<a class="btn btn-primary" @click="save(user)">保 存</a>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 	<script type="text/javascript" src="./index.js"></script>

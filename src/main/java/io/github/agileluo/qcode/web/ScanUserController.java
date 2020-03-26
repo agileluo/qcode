@@ -3,7 +3,9 @@ package io.github.agileluo.qcode.web;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.github.agileluo.qcode.mapper.ScanLogMapper;
+import io.github.agileluo.qcode.mapper.ScanUserMapper;
 import io.github.agileluo.qcode.model.ScanLog;
+import io.github.agileluo.qcode.model.ScanUser;
 import io.github.agileluo.qcode.util.BizException;
 import io.github.agileluo.qcode.util.CheckUtils;
 import io.github.agileluo.qcode.vo.PageReq;
@@ -21,45 +23,54 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("log")
-public class ScanLogController {
+@RequestMapping("user")
+public class ScanUserController {
 
     @Autowired
-    private ScanLogMapper mapper;
-
+    private ScanUserMapper mapper;
 
 
     @RequestMapping("add")
     @Transactional
-    public ScanLog add(@RequestBody ScanLog scanLog) {
-        CheckUtils.checkEmpty(scanLog, "userId", "group1", "group2", "group3", "qrcode");
-        try {
-            scanLog.setCreateTime(new Date());
-            mapper.insert(scanLog);
+    public ScanUser add(@RequestBody ScanUser scanUser) {
+        CheckUtils.checkEmpty(scanUser, "userName", "password", "realName");
+        scanUser.setCreateTime(new Date());
+        mapper.insert(scanUser);
+        return scanUser;
+    }
 
+    @RequestMapping("delete")
+    public void delete(String id){
+        CheckUtils.checkEmpty("id", id);
+        mapper.deleteByPrimaryKey(id);
+    }
 
-            return scanLog;
-        } catch (DuplicateKeyException ex) {
-            ScanLog query = new ScanLog();
-            query.setQrcode(scanLog.getQrcode());
-            ScanLog dbLog = mapper.selectOne(query);
-            if(scanLog.getGroup3().equals(dbLog.getGroup3()) && dbLog.getUserId().equals(scanLog.getUserId())){
-                return dbLog;
-            }
-            throw new BizException("记录已被【" + dbLog.getUserId() + "】于【" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dbLog.getCreateTime()) + "】 扫描到【" + dbLog.getGroup1() + " - " + dbLog.getGroup2() + " - " + dbLog.getGroup3() + "】");
-        }
+    @RequestMapping("getById")
+    public ScanUser getById(String id){
+        CheckUtils.checkEmpty("id", id);
+        return mapper.selectByPrimaryKey(id);
+    }
+
+    @RequestMapping("update")
+    public void update(@RequestBody ScanUser scanUser){
+        CheckUtils.checkEmpty(scanUser, "id");
+        mapper.updateByPrimaryKeySelective(scanUser);
     }
 
     @RequestMapping("pageQuery")
-    public PageResp<ScanLog> pageQuery(@RequestBody PageReq<ScanLogQueryVo> query) {
+    public PageResp<ScanUser> pageQuery(@RequestBody PageReq<ScanUser> query) {
         CheckUtils.checkEmpty(query, "page", "pageSize");
         PageHelper.startPage(query.getPage(), query.getPageSize());
-        PageResp<ScanLog> result = new PageResp<>();
-        List<ScanLog> items = mapper.query(query.getData());
+        PageResp<ScanUser> result = new PageResp<>();
+        List<ScanUser> items = mapper.select(query.getData());
         long totalCount = ((Page) items).getTotal();
         result.setItems(items);
         result.setTotal((int) totalCount);
         return result;
+    }
+    @RequestMapping("list")
+    public List<ScanUser> list() {
+       return mapper.selectAll();
     }
 
 

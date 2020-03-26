@@ -5,6 +5,6 @@ import io.github.agileluo.qcode.util.MybatisGeneratorUtil;
 public class CodeGen {
 
     public static void main(String[] args) throws Exception {
-        MybatisGeneratorUtil.genCode("scan_log_count");
+        MybatisGeneratorUtil.genCode("scan_user");
     }
 }

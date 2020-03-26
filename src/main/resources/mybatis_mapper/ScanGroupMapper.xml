@@ -12,15 +12,18 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 
-  <select id="queryGroupList" resultMap="BaseResultMap">
-     select * from scan_group
-      where
-      <if test='parentId == null or parentId == ""'>
-        parent_id is null
-      </if>
-      <if test='parentId != null and parentId != ""'>
-        parent_id = #{parentId}
-      </if>
-      order by update_time desc
-  </select>
+    <select id="queryGroupList" resultMap="BaseResultMap">
+        select * from scan_group
+        where
+        <if test='parentId == null or parentId == ""'>
+            parent_id is null
+        </if>
+        <if test='parentId != null and parentId != ""'>
+            parent_id = #{parentId}
+        </if>
+        <if test='openId != null and openId != ""'>
+            and  open_id = #{openId}
+        </if>
+        order by update_time desc
+    </select>
 </mapper>

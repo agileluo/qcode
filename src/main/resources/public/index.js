@@ -10,76 +10,74 @@ new Vue({
 	el : '#app',
 	data : function() {
 		return {
-			linkList : linkList,
-			serviceId : '',
-			serviceList : [],
-			configList : [],
-			config : {},
+            linkList : linkList,
+			users: [],
+			user : {},
 			dialogError : null,
-			editingConfig : null
+			editUser: null
 		};
 	},
 	methods : {
-		listServiceIds : function() {
+		listUsers : function() {
 			var _this = this;
-			http.get("/zk/listServiceIds", {
+			http.get("./user/list", {
 
 			}, function(resp) {
-				_this.serviceList = resp.content;
+				_this.users = resp.content;
 			})
 		},
-		selectService : function() {
-
-		},
 		add : function() {
-			this.config = {};
+			this.user = {};
 			openEdit();
 		},
-		edit : function(serviceId) {
+		edit : function(u) {
 			var _this = this;
+			_this.editUser = u;
 			_this.dialogError = null;
-			http.get("/zk/get", {
-				serviceId : serviceId
+			http.get("./user/getById", {
+				id : u.id
 			}, function(resp) {
 				if (resp) {
-					_this.config = resp.content
+					_this.user = resp.content
 				} else {
-					_this.config = {};
+					_this.user = {};
 				}
 				openEdit();
 			})
 
 		},
-		save : function(config) {
+		save : function(user) {
 			var _this = this;
-			if (!config.serviceId || !config.context) {
-				_this.dialogError = '服务名和内容都不能为空！';
+			if (!user.userName || !user.password || !user.realName) {
+				_this.dialogError = '用户名、密码和真实姓名不能为空都不能为空！';
 				return;
 			}
 			
-			var url = "/zk/save";
+			var url = "./user/add";
 			var isAdd = true;
-			if (config.updateDate) {
-				url = "/zk/update";
+			if (user.id) {
+				url = "./user/update";
 				isAdd = false;
 			}
-			http.post(url, config, function(resp) {
+			http.post(url, user, function(resp) {
 				if (isAdd) {
-					_this.serviceList.push(config.serviceId);
+					_this.users.push(resp.content);
+				} else {
+                    _this.listUsers();
 				}
 				$('#loginDialog').modal('hide');
 			}, function(err) {
 				_this.dialogError = '系统出错!';
 			})
 		},
-		del : function(serviceId, index) {
+		del : function(u, index) {
 			var _this = this;
 			_this.error = null;
 			if (confirm("确认删除")) {
-				http.get("/zk/delete", {
-					serviceId : serviceId
+				http.get("./user/delete", {
+					id : u.id
 				}, function(data) {
-					_this.serviceList.splice(index, 1);
+					_this.users.splice(index, 1);
 				}, function(err) {
 					alert("系统出错！");
 				})
@@ -87,6 +85,6 @@ new Vue({
 		}
 	},
 	mounted : function() {
-		this.listServiceIds();
+		this.listUsers();
 	}
 })

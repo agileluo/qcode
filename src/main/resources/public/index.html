@@ -3,15 +3,15 @@
 
 <head>
 <meta charset="utf-8">
-<title>zk配置管理中心</title>
-<link rel="stylesheet" href="/css/bootstrap.css" />
-<link rel="stylesheet" href="/css/docs.css" />
-<script type="text/javascript" src="/js/jquery-1.12.3.js"></script>
-<script type="text/javascript" src="/js/vue_2.3.0.js"></script>
-<script type="text/javascript" src="/js/vue-select_2.2.0.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/bootstrap.js"></script>
-<script type="text/javascript" src="/js/util.js"></script>
+<title>用户管理中心</title>
+<link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.css" />
+<link rel="stylesheet" href="./css/docs.css" />
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.3/jquery.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/vue/2.3.0/vue.js"></script>
+<script type="text/javascript" src="./js/vue-select_2.2.0.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/underscore.js/1.9.1/underscore.js"></script>
+<script type="text/javascript" src="https://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.js"></script>
+<script type="text/javascript" src="./js/util.js"></script>
 </head>
 
 <body>
@@ -28,7 +28,7 @@
 				<div>
 					<div class="page-header">
 						<h2>
-							zk配置管理中心 <small></small>
+							用户管理中心 <small></small>
 						</h2>
 					</div>
 				</div>
@@ -42,18 +42,24 @@
 						<table class="table table-condensed table-hover table-striped">
 							<thead>
 								<tr>
-									<th>服务名</th>
+									<th>用户名</th>
+									<th>真实姓名</th>
+									<th>微信openId</th>
+									<th>微信名</th>
 									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="(serviceId, index) in serviceList">
-									<td>{{serviceId}}</td>
+								<tr v-for="(u, index) in users">
+									<td>{{u.userName}}</td>
+									<td>{{u.realName}}</td>
+									<td>{{u.openId}}</td>
+									<td>{{u.wxName}}</td>
 									<td><a href="javascript:" class="btn btn-primary"
-										@click="edit(serviceId)">编辑</a> <a href="javascript:"
-										class="btn btn-danger" @click="del(serviceId, index)">删除</a></td>
+										@click="edit(u)">编辑</a> <a href="javascript:"
+										class="btn btn-danger" @click="del(u, index)">删除</a></td>
 								</tr>
-								<tr v-show="!serviceList || serviceList.length == 0">
+								<tr v-show="!users || users.length == 0">
 								  <td colspan="2">无数据</td>
 								</tr>
 							</tbody>
@@ -62,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal fade bs-example-modal-lg" tabindex="-1"
+		<div class="modal fade bs-example-modal-m" tabindex="-1"
 			role="dialog" id="loginDialog" aria-labelledby="gridSystemModalLabel">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -76,17 +82,24 @@
 					<div class="modal-body">
 						<form class="form-horizontal">
 							<div class="form-group">
-								<label for="userId" class="col-md-1 control-label">服务名</label>
+								<label class="col-md-2 control-label">用户名</label>
 								<div class="col-md-6">
 									<input type="text" class="form-control"
-										v-model="config.serviceId" name="serviceId" placeholder="服务名">
+										v-model="user.userName" name="serviceId" placeholder="用户名">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="password" class="col-md-1 control-label">内容</label>
-								<div class="col-md-11">
-									<textarea rows="20" cols="120" class="form-control"
-										v-model="config.context" placeholder="内容"></textarea>
+								<label class="col-md-2 control-label">密码</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control"
+										v-model="user.password" placeholder="密码"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">真实姓名</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control"
+											  v-model="user.realName" placeholder="真实姓名"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
@@ -99,7 +112,7 @@
 									<a class="btn btn-default" data-dismiss="modal">取 消</a>
 								</div>
 								<div class="col-md-1">
-									<a class="btn btn-primary" @click="save(config)">保 存</a>
+									<a class="btn btn-primary" @click="save(user)">保 存</a>
 								</div>
 							</div>
 						</form>

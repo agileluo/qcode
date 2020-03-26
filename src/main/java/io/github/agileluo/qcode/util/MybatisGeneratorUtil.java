@@ -38,7 +38,7 @@ public class MybatisGeneratorUtil {
 
     static void genCodeInner(String table,boolean overwrite)throws  Exception{
         String baseDir = MybatisGeneratorUtil.class.getClassLoader().getResource(".").getPath();
-        baseDir= baseDir.substring(1, baseDir.indexOf("target"));
+        baseDir= baseDir.substring(0, baseDir.indexOf("target"));
         log.info("projectDir: {}", baseDir);
 
         Properties p = new Properties();

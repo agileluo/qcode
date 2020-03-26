@@ -22,38 +22,40 @@ public class ScanGroupController {
     @Autowired
     private ScanGroupMapper mapper;
 
-    @RequestMapping("add")
-    public ScanGroup add(@RequestBody ScanGroup scanGroup){
-        try{
-            CheckUtils.checkEmpty(scanGroup, "name");
+    @RequestMapping({"add"})
+    public ScanGroup add(@RequestBody ScanGroup scanGroup) {
+        try {
+            CheckUtils.checkEmpty(scanGroup, new String[]{"name"});
             scanGroup.setCreateTime(new Date());
-            if(scanGroup.getParentId() != null){
-                ScanGroup parentGroup = mapper.selectByPrimaryKey(scanGroup.getParentId());
-                if(parentGroup == null){
+            if (scanGroup.getParentId() != null) {
+                ScanGroup parentGroup = (ScanGroup)this.mapper.selectByPrimaryKey(scanGroup.getParentId());
+                if (parentGroup == null) {
                     throw new BizException("父级不存在");
                 }
             }
-            mapper.insert(scanGroup);
+
+            this.mapper.insert(scanGroup);
             return scanGroup;
-        }catch(DuplicateKeyException ex){
+        } catch (DuplicateKeyException var3) {
             throw new BizException("分类已存在");
         }
     }
 
-    @RequestMapping("groupList")
-    public List<ScanGroup> queryGroupList(Long parentId){
-        return mapper.queryGroupList(parentId);
+    @RequestMapping({"groupList"})
+    public List<ScanGroup> queryGroupList(Long parentId, String openId) {
+        return this.mapper.queryGroupList(parentId, openId);
     }
 
-    @RequestMapping("delete")
-    public void delete(Long id){
+    @RequestMapping({"delete"})
+    public void delete(Long id) {
         CheckUtils.checkEmpty("id", id);
         ScanGroup query = new ScanGroup();
         query.setParentId(id);
-        List<ScanGroup> children = mapper.select(query);
-        if(CollectionUtils.isNotEmpty(children)){
+        List<ScanGroup> children = this.mapper.select(query);
+        if (CollectionUtils.isNotEmpty(children)) {
             throw new BizException("此分类包括子类信息，不能删除");
+        } else {
+            this.mapper.deleteByPrimaryKey(id);
         }
-        mapper.deleteByPrimaryKey(id);
     }
 }

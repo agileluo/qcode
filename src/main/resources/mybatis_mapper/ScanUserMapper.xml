@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.agileluo.qcode.mapper.ScanUserMapper">
+  <resultMap id="BaseResultMap" type="io.github.agileluo.qcode.model.ScanUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="wx_name" jdbcType="VARCHAR" property="wxName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

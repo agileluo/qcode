@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>用户管理中心</title>
+<link rel="stylesheet" href="/css/bootstrap.css" />
+<link rel="stylesheet" href="/css/docs.css" />
+<script type="text/javascript" src="/js/jquery-1.12.3.js"></script>
+<script type="text/javascript" src="/js/vue_2.3.0.js"></script>
+<script type="text/javascript" src="/js/vue-select_2.2.0.js"></script>
+<script type="text/javascript" src="/js/underscore.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+</head>
+
+<body>
+	<div id="app" class="container-fluid">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<ul class="nav nav-pills" >
+					<li v-for="link in linkList" role="presentation" ><a :href="link.url">{{link.name}}</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-11 col-md-offset-1">
+				<div>
+					<div class="page-header">
+						<h2>
+							用户管理中心 <small></small>
+						</h2>
+					</div>
+				</div>
+				<div class="row">
+					<form class="form-inline">
+						<a href="javascript:" class="btn btn-success" @click="add">新增</a>
+					</form>
+				</div>
+				<div class="row" style="margin-top: 10px">
+					<div>
+						<table class="table table-condensed table-hover table-striped">
+							<thead>
+								<tr>
+									<th>用户名</th>
+									<th>真实姓名</th>
+									<th>绑定微信</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="(u, index) in users">
+									<td>{{u.userName}}</td>
+									<td>{{u.realName}}</td>
+									<td>{{u.wxName}}</td>
+									<td><a href="javascript:" class="btn btn-primary"
+										@click="edit(u)">编辑</a> <a href="javascript:"
+										class="btn btn-danger" @click="del(u, index)">删除</a></td>
+								</tr>
+								<tr v-show="!users || users.length == 0">
+								  <td colspan="2">无数据</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade bs-example-modal-m" tabindex="-1"
+			role="dialog" id="loginDialog" aria-labelledby="gridSystemModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="gridSystemModalLabel">编辑</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-md-2 control-label">用户名</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control"
+										v-model="user.userName" name="serviceId" placeholder="用户名">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">密码</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control"
+										v-model="user.password" placeholder="密码"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">真实姓名</label>
+								<div class="col-md-6">
+									<input type="text" class="form-control"
+											  v-model="user.realName" placeholder="真实姓名"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<div v-show="dialogError" class="col-md-offset-1 col-md-10">
+									<span class="text-danger">{{dialogError}}</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-offset-9 col-md-1">
+									<a class="btn btn-default" data-dismiss="modal">取 消</a>
+								</div>
+								<div class="col-md-1">
+									<a class="btn btn-primary" @click="save(user)">保 存</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="./index.js"></script>
+</body>
+
+</html>
